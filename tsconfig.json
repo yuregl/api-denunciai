@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2017",                                 
+    "module": "commonjs",                                
+    "moduleResolution": "Node",
+    "allowJs": false,
+    "strict": false,
+    "noImplicitAny": true,
+    "esModuleInterop": true,                            
+    "forceConsistentCasingInFileNames": true,            
+    "skipLibCheck": true,                                
+    "outDir":"./dist",
+    "strictPropertyInitialization": false,
+    "typeRoots": [
+      "./src/@types", 
+      "./custom_typings",
+      "./@types",
+      "./node_modules/@types"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
