@@ -29,6 +29,19 @@ class UsersController {
     return response.status(200).json(token)
   }
 
+  handleGetUser = async(request: Request, response: Response) => {
+    const errors = validationResult(request);
+
+    if(!errors.isEmpty()){
+      return response.status(400).json({errors: errors.array()});
+    }
+
+    const { uuid } = request.headers;
+
+    const user = await this.userService.executeGetUser(uuid as string)
+    return response.status(200).json(user)
+  }
+
   handleDeleteAccount = async(request: Request, response: Response) => {
     const errors = validationResult(request);
 
