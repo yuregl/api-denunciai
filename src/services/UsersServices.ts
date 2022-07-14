@@ -80,7 +80,18 @@ class UsersService {
     const user = await this.usersRepository.findOne(id)
     user.active = false;
     return await this.usersRepository.save(user);
+  }
 
+  async executeGetUser(id: string){
+    const user = await this.usersRepository.findOne(id);
+
+    console.log(user)
+
+    if(!user) {
+      throw new Error("User does not exists")
+    }
+    delete user.password;
+    return user;
   }
 }
 
