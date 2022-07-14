@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid"
+import jwt from "jsonwebtoken"
 import { UsersRepository } from "repositories/Users";
-import { hashPassword } from "../utils/EncryptPassword"
+import { hashPassword,comparePassword } from "../utils/EncryptPassword"
 
 interface IUser {
   id: string;
@@ -9,6 +10,21 @@ interface IUser {
   password: string;
   admin?: boolean;
   active?: boolean 
+}
+
+interface ILogin {
+  email: string;
+  password: string;
+}
+
+interface IResponseToken {
+  token: string;
+  userId: string
+}
+
+interface ICredentials {
+  id: string;
+  uuid: string;
 }
 
 class UsersService {
@@ -31,6 +47,40 @@ class UsersService {
     });
 
     return await this.usersRepository.save(saveUser)
+  }
+
+  async executeLogin(login: ILogin): Promise<IResponseToken> {
+    const { email, password } = login;
+
+    const user = await this.usersRepository.findOne({email});
+
+    if(!user) {
+      throw new Error("Invalid credentials")
+    }
+
+    const valueComparePassword = await comparePassword(password, user.password)
+
+    if(!valueComparePassword){
+      throw new Error("Invalid credentials");
+    }
+
+    const token = `Bearer ${jwt.sign({
+      id: user.id
+    },<string> process.env.SECRET, {expiresIn: '1d'})}`;
+
+    return { token, userId: user.id }
+  }
+
+  async executeDeleteAccount ({id, uuid}: ICredentials) {
+
+    if(!(id ===uuid)){
+      throw new Error("Invalid Credentials")
+    }
+
+    const user = await this.usersRepository.findOne(id)
+    user.active = false;
+    return await this.usersRepository.save(user);
+
   }
 }
 
