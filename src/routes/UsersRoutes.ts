@@ -5,6 +5,8 @@ import { UsersService } from "../services/UsersServices";
 import { UsersRepository } from "../repositories/Users";
 import authMiddleware from "../middlewares/authMiddlewares";
 
+import { createUser, login, deleteAccount } from "../validators/User"
+
 const userRoutes = Router();
 
 function createUsersRoutes() {
@@ -12,11 +14,11 @@ function createUsersRoutes() {
   const userService = new UsersService(userRepository);
   const userController = new UsersController(userService);
 
-  userRoutes.post("/user/new", userController.handleCreateUser);
+  userRoutes.post("/user/new", createUser ,userController.handleCreateUser);
 
-  userRoutes.get("/user/login", userController.handleLogin)
+  userRoutes.get("/user/login", login ,userController.handleLogin)
 
-  userRoutes.delete('/user/delete/:uuid', authMiddleware ,userController.handleDeleteAccount)
+  userRoutes.delete('/user/delete/:uuid', authMiddleware, deleteAccount ,userController.handleDeleteAccount)
 
   return userRoutes;
 }
