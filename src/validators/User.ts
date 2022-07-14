@@ -17,8 +17,13 @@ const deleteAccount = [
   param('uuid').isString().notEmpty().isLength({min: 36, max: 36})
 ];
 
+const getUSer = [
+  param('uuid').isString().notEmpty().isLength({min: 36, max: 36})
+];
+
 export {
   createUser,
   login,
-  deleteAccount
+  deleteAccount,
+  getUSer
 }
