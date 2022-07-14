@@ -5,7 +5,12 @@ import { UsersService } from "../services/UsersServices";
 import { UsersRepository } from "../repositories/Users";
 import authMiddleware from "../middlewares/authMiddlewares";
 
-import { createUser, login, deleteAccount } from "../validators/User"
+import { 
+  createUser,
+  login,
+  deleteAccount,
+  getUSer
+} from "../validators/User"
 
 const userRoutes = Router();
 
@@ -20,6 +25,7 @@ function createUsersRoutes() {
 
   userRoutes.delete('/user/delete/:uuid', authMiddleware, deleteAccount ,userController.handleDeleteAccount)
 
+  userRoutes.get("/user/:uuid", authMiddleware, getUSer ,userController.handleGetUser)
   return userRoutes;
 }
 
