@@ -7,16 +7,16 @@ class Users {
   id: string;
 
   @Column()
-  name: String
+  name: string
 
   @Column()
-  full_name: String
+  full_name: string
 
   @Column()
-  email: String
+  email: string
 
   @Column()
-  password: String
+  password: string
 
   @Column()
   admin: Boolean
