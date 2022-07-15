@@ -27,6 +27,13 @@ interface ICredentials {
   uuid: string;
 }
 
+interface IUserUpdate {
+  name?: string;
+  full_name?: string;
+  password?: string;
+  admin?: boolean;
+}
+
 class UsersService {
   
   constructor(private usersRepository: UsersRepository){}
@@ -85,13 +92,23 @@ class UsersService {
   async executeGetUser(id: string){
     const user = await this.usersRepository.findOne(id);
 
-    console.log(user)
-
     if(!user) {
       throw new Error("User does not exists")
     }
     delete user.password;
     return user;
+  }
+
+  async executeUpdateUser(updateUser: IUserUpdate, id: string){
+    const user = await this.usersRepository.findOne(id);
+    
+    if(!user) {
+      throw new Error("User does not exists")
+    }
+
+    Object.assign(user, updateUser);
+
+    return await this.usersRepository.save(user);
   }
 }
 
