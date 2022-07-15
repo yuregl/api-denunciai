@@ -9,7 +9,8 @@ import {
   createUser,
   login,
   deleteAccount,
-  getUSer
+  getUSer,
+  updateUser
 } from "../validators/User"
 
 const userRoutes = Router();
@@ -19,13 +20,16 @@ function createUsersRoutes() {
   const userService = new UsersService(userRepository);
   const userController = new UsersController(userService);
 
-  userRoutes.post("/user/new", createUser ,userController.handleCreateUser);
+  userRoutes.post("/user/new", createUser, userController.handleCreateUser);
 
-  userRoutes.get("/user/login", login ,userController.handleLogin)
+  userRoutes.get("/user/login", login, userController.handleLogin)
 
-  userRoutes.delete('/user/delete/:uuid', authMiddleware, deleteAccount ,userController.handleDeleteAccount)
+  userRoutes.delete('/user/delete/:uuid', authMiddleware, deleteAccount, userController.handleDeleteAccount)
 
-  userRoutes.get("/user/:uuid", authMiddleware, getUSer ,userController.handleGetUser)
+  userRoutes.get("/user/:uuid", authMiddleware, getUSer, userController.handleGetUser)
+
+  userRoutes.put("/user/update/:uuid", authMiddleware, updateUser ,userController.handleUpdateAccount)
+
   return userRoutes;
 }
 
