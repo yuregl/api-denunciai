@@ -21,9 +21,17 @@ const getUSer = [
   param('uuid').isString().notEmpty().isLength({min: 36, max: 36})
 ];
 
+const updateUser = [ 
+  body('name').isString().optional().isLength({min: 3, max: 20}),
+  body('full_name').isString().optional().isLength({min: 10, max: 60}),
+  body('password').isString().optional().isLength({min: 6, max: 60}),
+  body('admin').isBoolean().optional(),
+];
+
 export {
   createUser,
   login,
   deleteAccount,
-  getUSer
+  getUSer,
+  updateUser
 }
