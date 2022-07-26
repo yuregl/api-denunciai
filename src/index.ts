@@ -9,7 +9,7 @@ dotenv.config();
 async function start() {
   await startDatabase();
   const port = process.env.PORT;
-  const app =  await exportApp();
+  const app = await exportApp();
 
   app.listen(port, () => {
     console.log(`Server is running in port http://localhost:${port}`);
