@@ -1,11 +1,36 @@
+import { UsersRepository } from "repositories/Users";
+import {v4 as uuid} from "uuid"
 import { ComplaintsRepository } from "../repositories/Complaints";
 
-class ComplaintsService {
-  constructor(private complaintsRepositories: ComplaintsRepository) {}
+import { Status } from "../models/Complaints";
 
-  async executeCreateComplaints(complaints: any) {
+interface ICreateComplaints {
+  userId: string,
+  title: string,
+  description: string,
+  address: string
+  id: string,
+  status: Status;
+}
+
+class ComplaintsService {
+  constructor(
+    private complaintsRepositories: ComplaintsRepository,
+    private usersRepositorie: UsersRepository
+  ) {}
+
+  async executeCreateComplaints(complaints: ICreateComplaints) {
+    const userAlreadyExist = await this.usersRepositorie.findOne(complaints.id)
+    if(!userAlreadyExist) {
+      throw new Error("Users not exist")
+    }
+    complaints.id = uuid();
+    complaints.status = Status.SENT;
     console.log(complaints)
-    return;
+    const saveComplaint = this.complaintsRepositories.create({
+      ...complaints
+    })
+    return await this.complaintsRepositories.save(saveComplaint);
   }
 }
 
