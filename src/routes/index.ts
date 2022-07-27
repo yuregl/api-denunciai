@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 import { createUsersRoutes } from "./UsersRoutes"
+import { createComplaintsRoutes } from "./ComplaintsRoutes";
 
 async function exportApp() {
   const app = express();
@@ -11,6 +12,7 @@ async function exportApp() {
   app.use(cors());
   app.use(express.json());
   app.use(createUsersRoutes());
+  app.use(createComplaintsRoutes());
   app.use(
     // eslint-disable-next-line no-unused-vars
     (err: Error, request: Request, response: Response, next: NextFunction) => {
