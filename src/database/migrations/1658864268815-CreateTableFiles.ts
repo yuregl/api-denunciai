@@ -1,0 +1,37 @@
+import {MigrationInterface, QueryRunner, Table} from "typeorm";
+
+export class CreateTableFiles1658864268815 implements MigrationInterface {
+
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: "files",
+        columns:[ 
+          {
+            name: "complaints_id",
+            type: "uuid"
+          },
+          {
+            name: "url",
+            type: "varchar"
+          }
+        ],
+        foreignKeys: [
+          {
+            name: "FKComplaintsFiles",
+            referencedTableName: "complaints",
+            referencedColumnNames: ["id"],
+            columnNames: ["complaints_id"],
+            onDelete: "SET NULL",
+            onUpdate: "SET NULL"
+          }
+        ]
+      })
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable("files");
+  }
+
+}
