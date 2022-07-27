@@ -8,6 +8,11 @@ export class CreateTableFiles1658864268815 implements MigrationInterface {
         name: "files",
         columns:[ 
           {
+            name: "id",
+            type: "uuid",
+            isPrimary: true
+          },
+          {
             name: "complaints_id",
             type: "uuid"
           },
