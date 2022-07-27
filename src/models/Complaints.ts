@@ -11,7 +11,7 @@ import {
 import { Files } from "./Files";
 import { Users } from "./Users";
 
-enum Status {
+export enum Status {
   PROCESSING = "processing",
   RESOLVED = "resolved",
   SENT = "sent"
@@ -28,15 +28,15 @@ class Complaints {
   @Column()
   description: string;
 
-  @Column()
-  user_id: string;
+  @Column({name: "user_id"})
+  userId: string;
 
   @JoinColumn({name: "user_id"})
   @ManyToOne(() => Users)
   user: Users
 
   @JoinColumn({name: "id"})
-  @OneToMany(() => Files, files => files.url)
+  @OneToMany(() => Files, files => files.complaints)
   files: Files
 
   @Column()
@@ -49,7 +49,7 @@ class Complaints {
   updated_at: Date
 
   @Column({
-    type: "enum",
+    type: "simple-enum",
     enum: Status,
     default: Status.SENT
   })
