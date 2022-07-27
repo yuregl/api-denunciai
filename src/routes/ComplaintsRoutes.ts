@@ -1,12 +1,14 @@
 import { Router } from "express";
 import multer from 'multer';
+import { getCustomRepository } from "typeorm";
+
 import { ComplaintsController } from "../controllers/ComplaintsController";
 import { ComplaintsRepository } from "../repositories/Complaints";
 import { ComplaintsService } from "../services/ComplaintsServices";
-import { getCustomRepository } from "typeorm";
 import { parseRequestComplaintsCreate } from '../middlewares/parseRequest';
 import { FilesRepository } from "../repositories/Files";
 import { FilesService } from "../services/FilesServices";
+import { UsersRepository } from "../repositories/Users";
 
 const upload = multer({ dest: 'tmp/' });
 
@@ -14,7 +16,9 @@ const complaintsRoutes = Router();
 
 function createComplaintsRoutes() {
   const complaintsRepository = getCustomRepository(ComplaintsRepository);
-  const complaintsService = new ComplaintsService(complaintsRepository);
+  const usersRepositorie = getCustomRepository(UsersRepository)
+
+  const complaintsService = new ComplaintsService(complaintsRepository, usersRepositorie);
   
   const filesRepositories = getCustomRepository(FilesRepository)
   const filesServices = new FilesService(filesRepositories)
