@@ -1,15 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Complaints } from "./Complaints";
 
 
-@Entity("Files")
+@Entity("files")
 class Files { 
 
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id: string;
 
-  @Column()
-  complaints_id: string;
+  @Column({name: "complaints_id"})
+  complaintsId: string;
 
   @JoinColumn({name: "complaints_id"})
   @ManyToOne(() => Complaints)
