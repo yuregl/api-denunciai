@@ -26,7 +26,6 @@ class ComplaintsService {
     }
     complaints.id = uuid();
     complaints.status = Status.SENT;
-    console.log(complaints)
     const saveComplaint = this.complaintsRepositories.create({
       ...complaints
     })
