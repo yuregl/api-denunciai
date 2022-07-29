@@ -28,7 +28,7 @@ function createComplaintsRoutes() {
   
   const complaintsController = new ComplaintsController(complaintsService, filesServices)
 
-  complaintsRoutes.get(
+  complaintsRoutes.post(
     "/complaints/new",
     authMiddleware,
     upload.array('files'),
