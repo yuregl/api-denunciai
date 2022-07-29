@@ -9,6 +9,7 @@ import { parseRequestComplaintsCreate } from '../middlewares/parseRequest';
 import { FilesRepository } from "../repositories/Files";
 import { FilesService } from "../services/FilesServices";
 import { UsersRepository } from "../repositories/Users";
+import authMiddleware from "../middlewares/authMiddlewares";
 
 import { createComplaints } from "../validators/Complaints"
 
@@ -29,6 +30,7 @@ function createComplaintsRoutes() {
 
   complaintsRoutes.get(
     "/complaints/new",
+    authMiddleware,
     upload.array('files'),
     parseRequestComplaintsCreate,
     createComplaints,
