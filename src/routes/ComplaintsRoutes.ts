@@ -10,6 +10,8 @@ import { FilesRepository } from "../repositories/Files";
 import { FilesService } from "../services/FilesServices";
 import { UsersRepository } from "../repositories/Users";
 
+import { createComplaints } from "../validators/Complaints"
+
 const upload = multer({ dest: 'tmp/' });
 
 const complaintsRoutes = Router();
@@ -29,6 +31,7 @@ function createComplaintsRoutes() {
     "/complaints/new",
     upload.array('files'),
     parseRequestComplaintsCreate,
+    createComplaints,
     complaintsController.handleCreateComplaints
   );
 
