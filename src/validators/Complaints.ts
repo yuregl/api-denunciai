@@ -11,7 +11,15 @@ const getComplaintsByComplaintId = [
   param("complaint_id").notEmpty().isLength({min: 36, max: 36}).withMessage("invalid parameter")
 ];
 
+const updateComplaint = [
+  param("complaint_id").notEmpty().isLength({min: 36, max: 36}).withMessage("invalid parameter"),
+  body("title").isString().optional(),
+  body("description").isString().optional(),
+  body("address").isString().optional()
+]
+
 export {
   createComplaints,
-  getComplaintsByComplaintId
+  getComplaintsByComplaintId,
+  updateComplaint
 }
