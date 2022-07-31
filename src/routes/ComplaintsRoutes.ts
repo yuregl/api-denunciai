@@ -11,22 +11,23 @@ import { FilesService } from "../services/FilesServices";
 import { UsersRepository } from "../repositories/Users";
 import authMiddleware from "../middlewares/authMiddlewares";
 
-import { createComplaints } from "../validators/Complaints"
+import { createComplaints, getComplaintsByComplaintId } from "../validators/Complaints"
 
 const upload = multer({ dest: 'tmp/' });
 
 const complaintsRoutes = Router();
 
 function createComplaintsRoutes() {
+  
   const complaintsRepository = getCustomRepository(ComplaintsRepository);
-  const usersRepositorie = getCustomRepository(UsersRepository)
+  const usersRepositorie = getCustomRepository(UsersRepository);
 
   const complaintsService = new ComplaintsService(complaintsRepository, usersRepositorie);
   
-  const filesRepositories = getCustomRepository(FilesRepository)
-  const filesServices = new FilesService(filesRepositories)
+  const filesRepositories = getCustomRepository(FilesRepository);
+  const filesServices = new FilesService(filesRepositories);
   
-  const complaintsController = new ComplaintsController(complaintsService, filesServices)
+  const complaintsController = new ComplaintsController(complaintsService, filesServices);
 
   complaintsRoutes.post(
     "/complaints/new",
@@ -35,6 +36,13 @@ function createComplaintsRoutes() {
     parseRequestComplaintsCreate,
     createComplaints,
     complaintsController.handleCreateComplaints
+  );
+
+  complaintsRoutes.get(
+    "/complaints/:complaint_id",
+    authMiddleware,
+    getComplaintsByComplaintId,
+    complaintsController.handleGetComplaintById
   );
 
   return complaintsRoutes;
