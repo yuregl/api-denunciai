@@ -61,7 +61,8 @@ class ComplaintsService {
     const complaints = await this.complaintsRepositories.find({
       where: {
         userId
-      }
+      },
+      relations: ["files"]
     });
 
     return complaints;
