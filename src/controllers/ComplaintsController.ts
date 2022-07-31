@@ -50,6 +50,20 @@ class ComplaintsController {
     return response.status(200).json({message: "Update done successfully"});
   }
 
+  handleGetAllComplaintsByUser = async (request: Request, response: Response) => {
+    const errors = validationResult(request);
+
+    if(!errors.isEmpty()){
+      return response.status(400).json({errors: errors.array()});
+    }
+
+    const userId = request.params.user_id;
+
+    const result = await this.complaintsService.executeGetAllComplaints(userId);
+
+    return response.status(200).json(result)
+  }
+
 }
 
 export { ComplaintsController }
