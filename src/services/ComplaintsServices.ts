@@ -50,6 +50,22 @@ class ComplaintsService {
 
     return await this.complaintsRepositories.save(complaint);
   }
+
+  async executeGetAllComplaints(userId: string) {
+    const user = await this.usersRepositorie.findOne(userId);
+
+    if(!user) {
+      throw new Error("Users not exist")
+    }
+
+    const complaints = await this.complaintsRepositories.find({
+      where: {
+        userId
+      }
+    });
+
+    return complaints;
+  }
 }
 
 export { ComplaintsService }
