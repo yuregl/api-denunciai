@@ -1,18 +1,10 @@
 import { UsersRepository } from "repositories/Users";
 import {v4 as uuid} from "uuid"
 import { ComplaintsRepository } from "../repositories/Complaints";
-
 import { Status } from "../models/Complaints";
 
-interface ICreateComplaints {
-  userId: string,
-  title: string,
-  description: string,
-  address: string
-  id: string,
-  status: Status;
-}
-
+import { ICreateComplaints, IUpdateComplaints } from "../interfaces/complaints"
+ 
 class ComplaintsService {
   constructor(
     private complaintsRepositories: ComplaintsRepository,
@@ -38,13 +30,25 @@ class ComplaintsService {
         id: complaintId
       },
       relations: ["files"]
-    })
+    });
 
     if(!complaint) {
-      throw new Error("Not found")
+      throw new Error("Not found");
     }
 
     return complaint;
+  }
+
+  async executeUpdateComplaints(update: IUpdateComplaints, complaint_id: string) {
+    const complaint = await this.complaintsRepositories.findOne(complaint_id)
+  
+    if(!complaint){
+      throw new Error("Not found");
+    }
+    update.updated_at = new Date()
+    Object.assign(complaint, update);
+
+    return await this.complaintsRepositories.save(complaint);
   }
 }
 
