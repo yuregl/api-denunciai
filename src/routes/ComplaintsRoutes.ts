@@ -11,7 +11,11 @@ import { FilesService } from "../services/FilesServices";
 import { UsersRepository } from "../repositories/Users";
 import authMiddleware from "../middlewares/authMiddlewares";
 
-import { createComplaints, getComplaintsByComplaintId } from "../validators/Complaints"
+import { 
+  createComplaints,
+  getComplaintsByComplaintId,
+  updateComplaint
+} from "../validators/Complaints"
 
 const upload = multer({ dest: 'tmp/' });
 
@@ -43,6 +47,13 @@ function createComplaintsRoutes() {
     authMiddleware,
     getComplaintsByComplaintId,
     complaintsController.handleGetComplaintById
+  );
+
+  complaintsRoutes.put(
+    "/complaints/update/:complaint_id", 
+    authMiddleware,
+    updateComplaint,
+    complaintsController.handleUpdateComplaint
   );
 
   return complaintsRoutes;
