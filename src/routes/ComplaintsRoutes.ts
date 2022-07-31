@@ -14,7 +14,8 @@ import authMiddleware from "../middlewares/authMiddlewares";
 import { 
   createComplaints,
   getComplaintsByComplaintId,
-  updateComplaint
+  updateComplaint,
+  getAllComplaint
 } from "../validators/Complaints"
 
 const upload = multer({ dest: 'tmp/' });
@@ -54,6 +55,13 @@ function createComplaintsRoutes() {
     authMiddleware,
     updateComplaint,
     complaintsController.handleUpdateComplaint
+  );
+
+  complaintsRoutes.get(
+    "/complaints/user_id/:user_id",
+    authMiddleware,
+    getAllComplaint,
+    complaintsController.handleGetAllComplaintsByUser
   );
 
   return complaintsRoutes;
