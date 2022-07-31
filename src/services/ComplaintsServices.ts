@@ -31,6 +31,21 @@ class ComplaintsService {
     })
     return await this.complaintsRepositories.save(saveComplaint);
   }
+
+  async executeGetComplaintById(complaintId: string) {
+    const complaint = await this.complaintsRepositories.findOne({ 
+      where: {
+        id: complaintId
+      },
+      relations: ["files"]
+    })
+
+    if(!complaint) {
+      throw new Error("Not found")
+    }
+
+    return complaint;
+  }
 }
 
 export { ComplaintsService }
