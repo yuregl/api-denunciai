@@ -19,6 +19,10 @@ export class CreateTableFiles1658864268815 implements MigrationInterface {
           {
             name: "url",
             type: "varchar"
+          },
+          {
+            name: "key",
+            type: "varchar"
           }
         ],
         foreignKeys: [
@@ -27,7 +31,7 @@ export class CreateTableFiles1658864268815 implements MigrationInterface {
             referencedTableName: "complaints",
             referencedColumnNames: ["id"],
             columnNames: ["complaints_id"],
-            onDelete: "SET NULL",
+            onDelete: "CASCADE",
             onUpdate: "SET NULL"
           }
         ]

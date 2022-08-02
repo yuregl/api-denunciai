@@ -49,7 +49,7 @@ export class CreateTableComplaints1658857276755 implements MigrationInterface {
             referencedTableName: "users",
             referencedColumnNames: ["id"],
             columnNames: ["user_id"],
-            onDelete: "SET NULL",
+            onDelete: "CASCADE",
             onUpdate: "SET NULL"
           }
         ]
