@@ -64,6 +64,21 @@ class ComplaintsController {
     return response.status(200).json(result)
   }
 
+  handleDeleteComplaint= async (request: Request, response: Response) => {
+    const errors = validationResult(request);
+
+    if(!errors.isEmpty()){
+      return response.status(400).json({errors: errors.array()});
+    }
+
+    const userId = request.params.user_id;
+    const complaintId = request.params.complaint_id;
+
+    await this.filesService.executeDeleteFiles(userId, complaintId);
+    await this.complaintsService.executeDeleteComplaint(complaintId);
+    return response.status(200).json({message: "Report successfully deleted"});
+  }
+
 }
 
 export { ComplaintsController }
