@@ -67,6 +67,11 @@ class ComplaintsService {
 
     return complaints;
   }
+
+  async executeDeleteComplaint(complaintId: string) {
+    const result = await this.complaintsRepositories.delete(complaintId);
+    return result;
+  }
 }
 
 export { ComplaintsService }
