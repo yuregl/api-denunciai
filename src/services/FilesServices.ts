@@ -2,18 +2,20 @@ import fs from "fs";
 import path from "path";
 import { v4 as uuid } from "uuid";
 
-import { saveFile } from "../api/awsS3";
+import { saveFile, deleteComplaints } from "../api/awsS3";
+import { IListSave } from "../interfaces/saveS3"
 import { FilesRepository } from "../repositories/Files";
 
 interface IReadFile {
-  fileBuffer: Buffer,
-  fileName: string
+  fileBuffer: Buffer;
+  fileName: string;
 }
 
 interface ISaveFile {
   id?: string;
-  url: string,
-  complaintsId: string,
+  url: string;
+  key: string;
+  complaintsId: string;
 }
 
 class FilesService {
@@ -42,10 +44,11 @@ class FilesService {
       }
       return saveFile(send)
     });
-    const urls = await Promise.all(responseS3);
-    const saveUrls = urls.map(file => {
+    const savesS3 = await Promise.all(responseS3);
+    const saveUrls = savesS3.map(file => {
       return this.saveFiles({
-        url: file,
+        url: file.url,
+        key: file.key,
         complaintsId: id
       })
     });
@@ -56,9 +59,27 @@ class FilesService {
 
   private async saveFiles(saveUrl: ISaveFile){
     saveUrl.id = uuid();
-    console.log(saveUrl)
     const createFiles = this.filesRepositories.create(saveUrl);
     return await this.filesRepositories.save(createFiles)
+  }
+
+  async executeDeleteFiles(userId: string, complaintId: string) {
+
+    const complaints = await this.filesRepositories.query(`
+      SELECT url, key FROM files
+      INNER JOIN complaints ON files.complaints_id  = complaints.id 
+      INNER JOIN users ON complaints.user_id  = users.id
+      AND users.id = '${userId}'
+      WHERE complaints_id = '${complaintId}'
+    `) as Array<IListSave>;
+
+    if(complaints.length === 0){
+      throw new Error("Complaint not found");
+    }
+
+    await deleteComplaints(complaints);
+
+    return;
   }
 }
 
