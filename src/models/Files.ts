@@ -17,6 +17,9 @@ class Files {
 
   @Column()
   url: string;
+
+  @Column()
+  key: string
 }
 
 export { Files }
