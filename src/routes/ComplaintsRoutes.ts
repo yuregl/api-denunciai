@@ -15,7 +15,8 @@ import {
   createComplaints,
   getComplaintsByComplaintId,
   updateComplaint,
-  getAllComplaint
+  getAllComplaint,
+  deleteComplaint
 } from "../validators/Complaints"
 
 const upload = multer({ dest: 'tmp/' });
@@ -63,6 +64,13 @@ function createComplaintsRoutes() {
     getAllComplaint,
     complaintsController.handleGetAllComplaintsByUser
   );
+
+  complaintsRoutes.delete(
+    "/complaints/user_id/:user_id/complaint_id/:complaint_id",
+    authMiddleware,
+    deleteComplaint,
+    complaintsController.handleDeleteComplaint
+  )
 
   return complaintsRoutes;
 }
