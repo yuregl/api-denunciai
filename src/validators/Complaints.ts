@@ -22,9 +22,15 @@ const getAllComplaint = [
   param("user_id").notEmpty().isLength({min: 36, max: 36}).withMessage("invalid parameter"),
 ];
 
+const deleteComplaint = [
+  param("user_id").notEmpty().isLength({min: 36, max: 36}).withMessage("invalid parameter"),
+  param("complaint_id").notEmpty().isLength({min: 36, max: 36}).withMessage("invalid parameter"),
+];
+
 export {
   createComplaints,
   getComplaintsByComplaintId,
   updateComplaint,
-  getAllComplaint
+  getAllComplaint,
+  deleteComplaint
 }
