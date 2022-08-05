@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { 
+  Column,
+  Entity,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  JoinColumn
+} from "typeorm";
+import { Complaints } from "./Complaints";
 
 @Entity("users")
 class Users {
@@ -7,6 +16,10 @@ class Users {
 
   @Column()
   name: string
+
+  @JoinColumn({name: "id"})
+  @OneToMany(() => Complaints, complaints => complaints.user)
+  complaints: Complaints[]
 
   @Column()
   full_name: string
