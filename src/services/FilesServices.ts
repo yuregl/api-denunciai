@@ -3,7 +3,6 @@ import path from "path";
 import { v4 as uuid } from "uuid";
 
 import { saveFile, deleteComplaints } from "../api/awsS3";
-import { IListSave } from "../interfaces/saveS3"
 import { FilesRepository } from "../repositories/Files";
 
 interface IReadFile {
@@ -64,22 +63,15 @@ class FilesService {
   }
 
   async executeDeleteFiles(userId: string, complaintId: string) {
+    const getComplaints = await this.filesRepositories.getComplaintsByIdAndUserId(userId, complaintId);
 
-    const complaints = await this.filesRepositories.query(`
-      SELECT url, key FROM files
-      INNER JOIN complaints ON files.complaints_id  = complaints.id 
-      INNER JOIN users ON complaints.user_id  = users.id
-      AND users.id = '${userId}'
-      WHERE complaints_id = '${complaintId}'
-    `) as Array<IListSave>;
-
-    if(complaints.length === 0){
+    if(getComplaints.length === 0){
       throw new Error("Complaint not found");
     }
 
-    await deleteComplaints(complaints);
+    await deleteComplaints(getComplaints);
 
-    return;
+    return true;
   }
 }
 
