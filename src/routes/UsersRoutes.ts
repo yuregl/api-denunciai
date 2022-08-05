@@ -11,13 +11,18 @@ import {
   deleteAccount,
   getUSer,
   updateUser
-} from "../validators/User"
+} from "../validators/User" 
+import { ComplaintsRepository } from "../repositories/Complaints";
+import { FilesRepository } from "../repositories/Files";
 
 const userRoutes = Router();
 
 function createUsersRoutes() {
   const userRepository = getCustomRepository(UsersRepository);
-  const userService = new UsersService(userRepository);
+  const complaintRepository = getCustomRepository(ComplaintsRepository);
+  const filesRepository = getCustomRepository(FilesRepository);
+  
+  const userService = new UsersService(userRepository, complaintRepository, filesRepository);
   const userController = new UsersController(userService);
 
   userRoutes.post("/user/new", createUser, userController.handleCreateUser);
