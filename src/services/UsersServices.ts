@@ -2,6 +2,10 @@ import { v4 as uuid } from "uuid"
 import jwt from "jsonwebtoken"
 import { UsersRepository } from "repositories/Users";
 import { hashPassword,comparePassword } from "../utils/EncryptPassword"
+import { ComplaintsRepository } from "../repositories/Complaints";
+import { FilesRepository } from "../repositories/Files";
+
+import { deleteComplaints } from "../api/awsS3";
 
 interface IUser {
   id: string;
@@ -36,7 +40,11 @@ interface IUserUpdate {
 
 class UsersService {
   
-  constructor(private usersRepository: UsersRepository){}
+  constructor(
+    private usersRepository: UsersRepository,
+    private complaintsRepository: ComplaintsRepository,
+    private filesRepository: FilesRepository
+  ){}
   
   async executeCreateUser(user: IUser) {
     const { email } = user;
@@ -47,7 +55,7 @@ class UsersService {
     }
 
     user.id = uuid();
-    user.password = await hashPassword( user.password );
+    user.password = await hashPassword(user.password);
 
     const saveUser = this.usersRepository.create({
       ...user
@@ -59,7 +67,12 @@ class UsersService {
   async executeLogin(login: ILogin): Promise<IResponseToken> {
     const { email, password } = login;
 
-    const user = await this.usersRepository.findOne({email});
+    const user = await this.usersRepository.findOne({
+      where: {
+        email
+      },
+      relations: ["complaints"]
+    });
 
     if(!user) {
       throw new Error("Invalid credentials")
@@ -84,7 +97,25 @@ class UsersService {
       throw new Error("Invalid Credentials")
     }
 
-    const user = await this.usersRepository.findOne(id)
+    const user = await this.usersRepository.findOne({
+      where: {
+        id
+      },
+      relations: ["complaints"]
+    });
+
+    const complaints = await Promise.all(user.complaints.map(value => {
+      return this.filesRepository.getComplaintsByIdAndUserId(value.userId, value.id)
+    }));
+
+    await Promise.all(complaints.map(array  => {
+      return deleteComplaints(array)
+    }));
+
+    await this.complaintsRepository.delete({
+      userId: id
+    });
+
     user.active = false;
     return await this.usersRepository.save(user);
   }
