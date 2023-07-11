@@ -12,7 +12,7 @@ class ComplaintsService {
   ) {}
 
   async executeCreateComplaints(complaints: ICreateComplaints) {
-    const userAlreadyExist = await this.usersRepositorie.findOne(complaints.id)
+    const userAlreadyExist = await this.usersRepositorie.findOne(complaints.userId)
     if(!userAlreadyExist) {
       throw new Error("Users not exist")
     }

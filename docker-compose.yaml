@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: api_service_denunciai
-    command: bash -c "yarn typeorm schema:drop && yarn typeorm migration:run && yarn dev"
+    command: bash -c "yarn typeorm migration:run && yarn dev"
     ports: 
       - ${PORT}:${PORT}
     depends_on:

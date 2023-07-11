@@ -6,37 +6,13 @@ import { ComplaintsRepository } from "../repositories/Complaints";
 import { FilesRepository } from "../repositories/Files";
 
 import { deleteComplaints } from "../api/awsS3";
-
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  admin?: boolean;
-  active?: boolean 
-}
-
-interface ILogin {
-  email: string;
-  password: string;
-}
-
-interface IResponseToken {
-  token: string;
-  userId: string
-}
-
-interface ICredentials {
-  id: string;
-  uuid: string;
-}
-
-interface IUserUpdate {
-  name?: string;
-  full_name?: string;
-  password?: string;
-  admin?: boolean;
-}
+import { 
+  ICredentials,
+  ILogin,
+  IResponseToken,
+  IUser,
+  IUserUpdate
+} from "../interfaces/users";
 
 class UsersService {
   
@@ -49,13 +25,14 @@ class UsersService {
   async executeCreateUser(user: IUser) {
     const { email } = user;
     const userAlreadyExist = await this.usersRepository.findOne({email});
-
     if(userAlreadyExist){
       throw new Error("Users already exist")
     }
 
     user.id = uuid();
     user.password = await hashPassword(user.password);
+    user.admin = user.admin ? true: false;
+    user.active = true;
 
     const saveUser = this.usersRepository.create({
       ...user
@@ -67,12 +44,7 @@ class UsersService {
   async executeLogin(login: ILogin): Promise<IResponseToken> {
     const { email, password } = login;
 
-    const user = await this.usersRepository.findOne({
-      where: {
-        email
-      },
-      relations: ["complaints"]
-    });
+    const user = await this.usersRepository.findOne({email});
 
     if(!user) {
       throw new Error("Invalid credentials")
@@ -107,7 +79,7 @@ class UsersService {
     const complaints = await Promise.all(user.complaints.map(value => {
       return this.filesRepository.getComplaintsByIdAndUserId(value.userId, value.id)
     }));
-
+    
     await Promise.all(complaints.map(array  => {
       return deleteComplaints(array)
     }));
